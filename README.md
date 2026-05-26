@@ -23,4 +23,4 @@ This project displays the current time in real‑time with a clean and responsiv
 ## 📦 How to Use
 1. Download or clone the repository  
    ```bash
-   git clone https://github.com/mohit-089/Clock-App.git
+   git clone [https://github.com/mohit-089/Clock-App.git](https://mohit-089.github.io/Clock-App/)
