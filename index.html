@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clock App</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+  <div class="app" id="app">
+
+    <div class="topbar">
+      <div class="app-logo" id="appLogo">
+        <i class="ti ti-clock" id="logoIcon"></i>
+      </div>
+      <span class="app-title" id="appTitle">Clock</span>
+      <div class="theme-row">
+        <div class="tbtn active" id="th0" onclick="applyTheme(0)" title="Pearl"></div>
+        <div class="tbtn" id="th1" onclick="applyTheme(1)" title="Obsidian"></div>
+        <div class="tbtn" id="th2" onclick="applyTheme(2)" title="Forest"></div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="nav-btn active" id="nav0" onclick="showPanel(0)">
+        <i class="ti ti-clock"></i><span>Clock</span>
+      </button>
+      <button class="nav-btn" id="nav1" onclick="showPanel(1)">
+        <i class="ti ti-alarm"></i><span>Alarm</span>
+      </button>
+      <button class="nav-btn" id="nav2" onclick="showPanel(2)">
+        <i class="ti ti-stopwatch"></i><span>Stopwatch</span>
+      </button>
+      <button class="nav-btn" id="nav3" onclick="showPanel(3)">
+        <i class="ti ti-hourglass"></i><span>Timer</span>
+      </button>
+    </div>
+
+    <div class="panels">
+
+      <!-- CLOCK -->
+      <div class="panel active" id="panel0">
+        <div class="clock-card" id="clockCard">
+          <div class="dial" id="dial">
+            <div class="dial-ring" id="dialRing"></div>
+            <div id="ticks"></div>
+            <div id="hlabels"></div>
+            <div class="hc" id="hourHand"><div id="hh"></div></div>
+            <div class="hc" id="minHand"><div id="hm"></div></div>
+            <div class="hc" id="secHand"><div id="hs"></div></div>
+            <div class="cdot" id="cdot"></div>
+            <div class="cdot2" id="cdot2"></div>
+          </div>
+          <div class="divider-line" id="divLine"></div>
+          <div class="info-row">
+            <div class="dtime" id="dtime"></div>
+            <div class="ddate" id="ddate"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALARM -->
+      <div class="panel" id="panel1">
+        <div class="alarm-list" id="alarmList"></div>
+        <button class="add-alarm" id="addAlarmBtn" onclick="addAlarm()">
+          <i class="ti ti-plus"></i> Add Alarm
+        </button>
+      </div>
+
+      <!-- STOPWATCH -->
+      <div class="panel" id="panel2">
+        <div class="sw-display" id="swDisplay">
+          00:<span id="swSec">00</span><span class="sw-ms">.<span id="swMs">00</span></span>
+        </div>
+        <div class="sw-btns">
+          <button class="sw-btn" id="lapBtn" onclick="swLap()">Lap</button>
+          <button class="sw-btn" id="swStartBtn" onclick="swToggle()">
+            <i class="ti ti-player-play" id="swIcon"></i>
+          </button>
+          <button class="sw-btn" id="swResetBtn" onclick="swReset()">
+            <i class="ti ti-rotate-clockwise"></i>
+          </button>
+        </div>
+        <div class="lap-list" id="lapList"></div>
+      </div>
+
+      <!-- TIMER -->
+      <div class="panel" id="panel3">
+        <div class="timer-presets">
+          <button class="preset-btn" onclick="setTimer(60)">1 min</button>
+          <button class="preset-btn" onclick="setTimer(180)">3 min</button>
+          <button class="preset-btn" onclick="setTimer(300)">5 min</button>
+          <button class="preset-btn" onclick="setTimer(600)">10 min</button>
+          <button class="preset-btn" onclick="setTimer(900)">15 min</button>
+          <button class="preset-btn" onclick="setTimer(1800)">30 min</button>
+        </div>
+        <div class="timer-arc">
+          <svg width="180" height="180" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="80" fill="none" stroke-width="5" id="arcBg"/>
+            <circle cx="90" cy="90" r="80" fill="none" stroke-width="5" stroke-linecap="round" id="arcFg"/>
+          </svg>
+          <div class="timer-center" id="timerCenter">05:00</div>
+        </div>
+        <div class="timer-sub" id="timerSub">READY</div>
+        <div class="timer-btns">
+          <button class="sw-btn" id="timerStartBtn" onclick="timerToggle()">
+            <i class="ti ti-player-play" id="timerIcon"></i>
+          </button>
+          <button class="sw-btn" id="timerResetBtn" onclick="timerReset()">
+            <i class="ti ti-rotate-clockwise"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
