@@ -1,390 +1,477 @@
-const C = 2 * Math.PI * 80;
-document.getElementById('arcFg').style.strokeDasharray = C;
-document.getElementById('arcFg').style.strokeDashoffset = 0;
+/* ══════════════════════════════════════════════
+   CLOCK APP  –  script.js
+   Tabs: Clock + Weather | Alarm | Stopwatch | Timer
+   Themes: Pearl | Obsidian | Forest | iOS
+══════════════════════════════════════════════ */
 
-/* ── THEMES ── */
-const themes = [
-  {
-    name: 'Pearl',
-    dot: '#e8e8e8',
-    app: '#f5f4f0', appBorder: '#e0deda',
-    logo: '#1a1a1a', logoIcon: '#f5f4f0', title: '#1a1a1a',
-    nav: '#555', navActive: 'rgba(0,0,0,0.07)',
-    clockCard: '#ffffff', clockBorder: '#e8e6e1',
-    dial: '#f0ede8', dialBorder: '#d6d2cc',
-    ring: 'rgba(0,0,0,0.08)',
-    tickMaj: '#333', tickMin: '#ccc',
-    nums: '#444',
-    hh: '#1a1a1a', hm: '#555', hs: '#b07d4a',
-    cdot: '#1a1a1a', cdot2: '#b07d4a',
-    div: '#e8e6e1', dtime: '#1a1a1a', ddate: '#888',
-    alarmBg: '#ffffff', alarmBorder: '#e8e6e1',
-    alarmTime: '#1a1a1a', alarmLabel: '#888',
-    toggleOn: '#1a1a1a', toggleOff: '#d0cdc8',
-    addBorder: '#ccc', addColor: '#888',
-    swTxt: '#1a1a1a', swMsTxt: '#888',
-    btnPri: '#1a1a1a', btnPriTxt: '#f5f4f0',
-    btnSec: '#e8e6e1', btnSecTxt: '#1a1a1a',
-    lapBg: '#f5f4f0', lapTxt: '#555',
-    presetBg: '#e8e6e1', presetTxt: '#333',
-    arcBg: '#e0deda', arcFg: '#b07d4a',
-    timerTxt: '#1a1a1a', timerSub: '#b07d4a'
-  },
-  {
-    name: 'Obsidian',
-    dot: '#2a2a2a',
-    app: '#111111', appBorder: '#2a2a2a',
-    logo: '#f0f0f0', logoIcon: '#111', title: '#f0f0f0',
-    nav: '#888', navActive: 'rgba(255,255,255,0.07)',
-    clockCard: '#1a1a1a', clockBorder: '#2a2a2a',
-    dial: '#0d0d0d', dialBorder: '#2a2a2a',
-    ring: 'rgba(255,255,255,0.06)',
-    tickMaj: '#e0e0e0', tickMin: '#333',
-    nums: '#aaa',
-    hh: '#f0f0f0', hm: '#888', hs: '#c0a060',
-    cdot: '#f0f0f0', cdot2: '#c0a060',
-    div: '#222', dtime: '#f0f0f0', ddate: '#666',
-    alarmBg: '#1a1a1a', alarmBorder: '#2a2a2a',
-    alarmTime: '#f0f0f0', alarmLabel: '#666',
-    toggleOn: '#f0f0f0', toggleOff: '#2a2a2a',
-    addBorder: '#333', addColor: '#555',
-    swTxt: '#f0f0f0', swMsTxt: '#555',
-    btnPri: '#f0f0f0', btnPriTxt: '#111',
-    btnSec: '#222', btnSecTxt: '#888',
-    lapBg: '#161616', lapTxt: '#666',
-    presetBg: '#1e1e1e', presetTxt: '#888',
-    arcBg: '#222', arcFg: '#c0a060',
-    timerTxt: '#f0f0f0', timerSub: '#c0a060'
-  },
-  {
-    name: 'Forest',
-    dot: '#1a2e1a',
-    app: '#0f1a0f', appBorder: '#1e3a1e',
-    logo: '#2d5a2d', logoIcon: '#a8d8a8', title: '#c8e6c8',
-    nav: '#6aaa6a', navActive: 'rgba(100,180,100,0.1)',
-    clockCard: '#131f13', clockBorder: '#1e3a1e',
-    dial: '#0a140a', dialBorder: '#1e3a1e',
-    ring: 'rgba(100,180,100,0.08)',
-    tickMaj: '#7ec87e', tickMin: '#1e3a1e',
-    nums: '#6aaa6a',
-    hh: '#c8e6c8', hm: '#6aaa6a', hs: '#4caf50',
-    cdot: '#c8e6c8', cdot2: '#4caf50',
-    div: '#1e3a1e', dtime: '#c8e6c8', ddate: '#4a7a4a',
-    alarmBg: '#131f13', alarmBorder: '#1e3a1e',
-    alarmTime: '#c8e6c8', alarmLabel: '#4a7a4a',
-    toggleOn: '#4caf50', toggleOff: '#1e3a1e',
-    addBorder: '#2d5a2d', addColor: '#4a7a4a',
-    swTxt: '#c8e6c8', swMsTxt: '#4a7a4a',
-    btnPri: '#2d5a2d', btnPriTxt: '#c8e6c8',
-    btnSec: '#1a2e1a', btnSecTxt: '#6aaa6a',
-    lapBg: '#111a11', lapTxt: '#4a7a4a',
-    presetBg: '#1a2e1a', presetTxt: '#6aaa6a',
-    arcBg: '#1e3a1e', arcFg: '#4caf50',
-    timerTxt: '#c8e6c8', timerSub: '#4caf50'
-  }
-];
+/* ── TIMER ARC SETUP ── */
+const TC = 2 * Math.PI * 75;
+document.getElementById('tarcFg').style.strokeDasharray = TC;
+document.getElementById('tarcFg').style.strokeDashoffset = 0;
+document.getElementById('tarcBg').style.stroke = 'var(--arc-bg)';
 
-let curTheme = 0;
+/* ── PICKER DATA ── */
+const SOUNDS  = ['None','Radar','Chimes','Crystals','Hillside','Opening','Playtime',
+                 'Popcorn','Presto','Ripple','Sencha','Signal','Silk','Slow Rise',
+                 'Stargaze','Digital Beep','Classic Bell','Marimba'];
+const SNOOZES = ['Off','1 min','2 min','3 min','5 min','10 min','15 min'];
+const REPEATS = ['Never','Every Day','Weekdays','Weekends','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
-/* set dot colors once */
-themes.forEach((t, i) => {
-  document.getElementById('th' + i).style.background = t.dot;
-});
+/* ── THEME CLASSES ── */
+const THEME_CLS = ['', 't-obsidian', 't-forest', 't-ios'];
+const DOT_COLORS = ['#e8e6e1', '#2a2a2a', '#1a2e1a', '#007aff'];
 
-function applyTheme(i) {
-  curTheme = i;
-  const t = themes[i];
-
-  const app = document.getElementById('app');
-  app.style.background = t.app;
-  app.style.borderColor = t.appBorder;
-
-  document.getElementById('appLogo').style.background = t.logo;
-  document.getElementById('logoIcon').style.color = t.logoIcon;
-  document.getElementById('appTitle').style.color = t.title;
-
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    b.style.color = t.nav;
-    b.style.background = b.classList.contains('active') ? t.navActive : 'transparent';
+(function initDots() {
+  THEME_CLS.forEach((_, i) => {
+    document.getElementById('td' + i).style.background = DOT_COLORS[i];
   });
+})();
 
-  document.getElementById('clockCard').style.background = t.clockCard;
-  document.getElementById('clockCard').style.borderColor = t.clockBorder;
-  document.getElementById('dial').style.background = t.dial;
-  document.getElementById('dial').style.borderColor = t.dialBorder;
-  document.getElementById('dialRing').style.borderColor = t.ring;
-
-  document.querySelectorAll('.tick-el').forEach((el, idx) => {
-    el.style.background = (idx % 5 === 0) ? t.tickMaj : t.tickMin;
-    el.style.opacity    = (idx % 5 === 0) ? '0.75' : '0.4';
-  });
-  document.querySelectorAll('.hlabel').forEach(el => el.style.color = t.nums);
-
-  document.getElementById('hh').style.background    = t.hh;
-  document.getElementById('hm').style.background    = t.hm;
-  document.getElementById('hs').style.background    = t.hs;
-  document.getElementById('cdot').style.background  = t.cdot;
-  document.getElementById('cdot2').style.background = t.cdot2;
-  document.getElementById('divLine').style.background = t.div;
-  document.getElementById('dtime').style.color      = t.dtime;
-  document.getElementById('ddate').style.color      = t.ddate;
-
+function setTheme(i) {
+  const app = document.getElementById('mainApp');
+  THEME_CLS.forEach(c => { if (c) app.classList.remove(c); });
+  if (THEME_CLS[i]) app.classList.add(THEME_CLS[i]);
+  document.querySelectorAll('.tdot').forEach((d, di) => d.classList.toggle('active', di === i));
+  /* re-set tog colours */
   renderAlarms();
-  document.getElementById('addAlarmBtn').style.borderColor = t.addBorder;
-  document.getElementById('addAlarmBtn').style.color       = t.addColor;
-
-  document.getElementById('swDisplay').style.color = t.swTxt;
-  document.querySelectorAll('.sw-ms').forEach(e => e.style.color = t.swMsTxt);
-
-  document.getElementById('lapBtn').style.background      = t.btnSec;
-  document.getElementById('lapBtn').style.color           = t.btnSecTxt;
-  document.getElementById('swStartBtn').style.background  = t.btnPri;
-  document.getElementById('swStartBtn').style.color       = t.btnPriTxt;
-  document.getElementById('swResetBtn').style.background  = t.btnSec;
-  document.getElementById('swResetBtn').style.color       = t.btnSecTxt;
-
-  document.querySelectorAll('.lap-item').forEach(el => {
-    el.style.background = t.lapBg;
-    el.style.color      = t.lapTxt;
-  });
-  document.querySelectorAll('.preset-btn').forEach(el => {
-    el.style.background = t.presetBg;
-    el.style.color      = t.presetTxt;
-  });
-
-  document.getElementById('arcBg').style.stroke    = t.arcBg;
-  document.getElementById('arcFg').style.stroke    = t.arcFg;
-  document.getElementById('timerCenter').style.color = t.timerTxt;
-  document.getElementById('timerSub').style.color    = t.timerSub;
-
-  document.getElementById('timerStartBtn').style.background = t.btnPri;
-  document.getElementById('timerStartBtn').style.color      = t.btnPriTxt;
-  document.getElementById('timerResetBtn').style.background = t.btnSec;
-  document.getElementById('timerResetBtn').style.color      = t.btnSecTxt;
-
-  document.querySelectorAll('.tbtn').forEach((b, bi) => b.classList.toggle('active', bi === i));
 }
 
-/* ── NAV ── */
-function showPanel(i) {
-  document.querySelectorAll('.panel').forEach((p, pi) => p.classList.toggle('active', pi === i));
-  document.querySelectorAll('.nav-btn').forEach((b, bi) => {
-    b.classList.toggle('active', bi === i);
-    b.style.background = bi === i ? themes[curTheme].navActive : 'transparent';
+/* ── TAB SWITCHING ── */
+function showTab(i) {
+  document.querySelectorAll('.pnl').forEach((p, pi) => p.classList.toggle('active', pi === i));
+  document.querySelectorAll('.nb').forEach((b, bi) => b.classList.toggle('active', bi === i));
+}
+
+/* ── BUILD CLOCK DIAL ── */
+(function buildDial() {
+  const cx = 90, cy = 90;
+
+  for (let i = 0; i < 60; i++) {
+    const a   = (i * 6 - 90) * Math.PI / 180;
+    const maj = i % 5 === 0;
+    const d   = maj ? 76 : 80;
+    const h   = maj ? 9  : 5;
+    const w   = maj ? 2  : 1;
+    const el  = document.createElement('div');
+    el.className = 'tick-el';
+    el.style.cssText =
+      `position:absolute;` +
+      `top:${cy + Math.sin(a) * d - h}px;` +
+      `left:${cx + Math.cos(a) * d - w / 2}px;` +
+      `transform:rotate(${i * 6}deg);` +
+      `transform-origin:50% 100%;` +
+      `width:${w}px;height:${h}px;border-radius:2px;` +
+      `background:var(--${maj ? 'text-sec' : 'dial-ring'});` +
+      `opacity:${maj ? .75 : .4};`;
+    document.getElementById('tks').appendChild(el);
+  }
+
+  [12,1,2,3,4,5,6,7,8,9,10,11].forEach((n, i) => {
+    const a  = (i * 30 - 90) * Math.PI / 180;
+    const d  = 65;
+    const el = document.createElement('div');
+    el.className = 'hlbl';
+    el.textContent = n;
+    el.style.cssText +=
+      `position:absolute;` +
+      `top:${cy + Math.sin(a) * d - 9}px;` +
+      `left:${cx + Math.cos(a) * d - 9}px;` +
+      `font-size:${n === 12 ? '12px' : '10px'};` +
+      `font-weight:${n === 12 ? '500' : '400'};`;
+    document.getElementById('hls').appendChild(el);
   });
-}
+})();
 
-/* ── DIAL BUILD ── */
-const cx = 100, cy = 100;
-for (let i = 0; i < 60; i++) {
-  const a = (i * 6 - 90) * Math.PI / 180;
-  const maj = i % 5 === 0;
-  const d = maj ? 84 : 88, h = maj ? 10 : 5, w = maj ? 2 : 1;
-  const el = document.createElement('div');
-  el.className = 'tick-el';
-  el.style.cssText =
-    `position:absolute;` +
-    `top:${cy + Math.sin(a) * d - h}px;` +
-    `left:${cx + Math.cos(a) * d - w / 2}px;` +
-    `transform:rotate(${i * 6}deg);` +
-    `transform-origin:50% 100%;` +
-    `width:${w}px;height:${h}px;border-radius:2px;`;
-  document.getElementById('ticks').appendChild(el);
-}
-[12,1,2,3,4,5,6,7,8,9,10,11].forEach((n, i) => {
-  const a = (i * 30 - 90) * Math.PI / 180, d = 72;
-  const el = document.createElement('div');
-  el.className = 'hlabel';
-  el.textContent = n;
-  el.style.cssText +=
-    `position:absolute;` +
-    `top:${cy + Math.sin(a) * d - 10}px;` +
-    `left:${cx + Math.cos(a) * d - 10}px;` +
-    `font-size:${n === 12 ? '13px' : '11px'};` +
-    `font-weight:${n === 12 ? '500' : '400'};`;
-  document.getElementById('hlabels').appendChild(el);
-});
-
-/* ── CLOCK ── */
+/* ── CLOCK TICK ── */
 const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-function updateClock() {
-  const now = new Date();
-  const h = now.getHours(), m = now.getMinutes(),
-        s = now.getSeconds(), ms = now.getMilliseconds();
+(function startClock() {
+  function tick() {
+    const now = new Date();
+    const h   = now.getHours();
+    const m   = now.getMinutes();
+    const s   = now.getSeconds();
+    const ms  = now.getMilliseconds();
 
-  document.getElementById('hourHand').style.transform =
-    `translateX(-50%) rotate(${(h % 12) * 30 + m * 0.5}deg)`;
-  document.getElementById('minHand').style.transform  =
-    `translateX(-50%) rotate(${m * 6 + s * 0.1}deg)`;
-  document.getElementById('secHand').style.transform  =
-    `translateX(-50%) rotate(${s * 6 + ms * 0.006}deg)`;
+    document.getElementById('hH').style.transform =
+      `translateX(-50%) rotate(${(h % 12) * 30 + m * 0.5}deg)`;
+    document.getElementById('hM').style.transform =
+      `translateX(-50%) rotate(${m * 6 + s * 0.1}deg)`;
+    document.getElementById('hS').style.transform =
+      `translateX(-50%) rotate(${s * 6 + ms * 0.006}deg)`;
 
-  const hh = h % 12 || 12, ampm = h < 12 ? 'AM' : 'PM';
-  const p = n => String(n).padStart(2, '0');
-  document.getElementById('dtime').textContent = `${p(hh)}:${p(m)} ${ampm}`;
-  document.getElementById('ddate').textContent = `${DAYS[now.getDay()]}  ${now.getDate()} ${MONTHS[now.getMonth()]}`;
+    const hh   = h % 12 || 12;
+    const ampm = h < 12 ? 'AM' : 'PM';
+    const pad  = n => String(n).padStart(2, '0');
+    document.getElementById('dtxt').textContent  = `${pad(hh)}:${pad(m)} ${ampm}`;
+    document.getElementById('ddtxt').textContent =
+      `${DAYS[now.getDay()]}  ${now.getDate()} ${MONTHS[now.getMonth()]}`;
+  }
+  setInterval(tick, 50);
+  tick();
+})();
+
+/* ══════════════════════════════════════════════
+   WEATHER
+══════════════════════════════════════════════ */
+const WX_ICONS = {
+  0:'ti-sun', 1:'ti-sun', 2:'ti-cloud', 3:'ti-cloud',
+  45:'ti-cloud-fog', 48:'ti-cloud-fog',
+  51:'ti-cloud-drizzle', 53:'ti-cloud-drizzle', 55:'ti-cloud-drizzle',
+  61:'ti-cloud-rain',   63:'ti-cloud-rain',   65:'ti-cloud-rain',
+  71:'ti-snowflake',    73:'ti-snowflake',    75:'ti-snowflake',
+  80:'ti-cloud-rain',   81:'ti-cloud-rain',   82:'ti-cloud-rain',
+  95:'ti-cloud-storm',  96:'ti-cloud-storm',  99:'ti-cloud-storm'
+};
+const WX_DESC = {
+  0:'Clear sky', 1:'Mostly clear', 2:'Partly cloudy', 3:'Overcast',
+  45:'Foggy', 48:'Icy fog',
+  51:'Light drizzle', 53:'Drizzle', 55:'Heavy drizzle',
+  61:'Light rain', 63:'Rain', 65:'Heavy rain',
+  71:'Light snow', 73:'Snow', 75:'Heavy snow',
+  80:'Rain showers', 81:'Heavy showers', 82:'Violent showers',
+  95:'Thunderstorm', 96:'Hail storm', 99:'Heavy hail'
+};
+
+async function fetchWeather() {
+  const wxBody = document.getElementById('wxBody');
+  const wxLoc  = document.getElementById('wxLoc');
+  wxBody.innerHTML = '<div class="wx-loading">Detecting location…</div>';
+  wxLoc.textContent = 'Detecting…';
+
+  try {
+    const pos = await new Promise((res, rej) =>
+      navigator.geolocation.getCurrentPosition(res, rej, { timeout: 8000 })
+    );
+    const { latitude: lat, longitude: lon } = pos.coords;
+    wxBody.innerHTML = '<div class="wx-loading">Fetching weather…</div>';
+
+    const [wxRes, geoRes] = await Promise.all([
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+            `&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weathercode` +
+            `&timezone=auto&wind_speed_unit=kmh`),
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+    ]);
+
+    const wxData  = await wxRes.json();
+    const geoData = await geoRes.json();
+    const c       = wxData.current;
+    const code    = c.weathercode;
+    const addr    = geoData.address;
+    const city    = addr.city || addr.town || addr.village || addr.county || 'Your Location';
+    const icon    = WX_ICONS[code] || 'ti-cloud';
+    const desc    = WX_DESC[code]  || 'Unknown';
+
+    wxLoc.textContent = city;
+    wxBody.innerHTML  = `
+      <div class="wx-main">
+        <i class="ti ${icon} wx-icon"></i>
+        <div>
+          <div class="wx-temp">${Math.round(c.temperature_2m)}°C</div>
+          <div class="wx-desc">${desc}</div>
+        </div>
+      </div>
+      <div class="wx-details">
+        <span class="wx-detail">
+          <i class="ti ti-droplet"></i>${c.relative_humidity_2m}% humidity
+        </span>
+        <span class="wx-detail">
+          <i class="ti ti-wind"></i>${Math.round(c.wind_speed_10m)} km/h wind
+        </span>
+      </div>`;
+
+  } catch (e) {
+    const msg = e.code === 1
+      ? 'Allow location access and tap retry'
+      : 'Could not load weather — check connection';
+    wxLoc.textContent = 'Location unavailable';
+    wxBody.innerHTML  =
+      `<div class="wx-loading">${msg}<br>
+       <button class="wx-retry" onclick="fetchWeather()">Retry</button>
+       </div>`;
+  }
 }
-setInterval(updateClock, 50);
-updateClock();
 
-/* ── ALARM ── */
+fetchWeather();
+
+/* ══════════════════════════════════════════════
+   ALARMS
+══════════════════════════════════════════════ */
 let alarms = [
-  { time: '07:00', label: 'Good Morning', on: true  },
-  { time: '09:30', label: 'Meeting',      on: false },
-  { time: '22:00', label: 'Sleep',        on: true  }
+  { time: '07:00', label: 'Good Morning', on: true,  sound: 'Radar',  snooze: '5 min', repeat: 'Never'     },
+  { time: '09:30', label: 'Meeting',      on: false, sound: 'Chimes', snooze: 'Off',   repeat: 'Weekdays'  },
+  { time: '22:00', label: 'Sleep',        on: true,  sound: 'Silk',   snooze: '5 min', repeat: 'Every Day' }
 ];
+let expIdx = -1;
 
 function renderAlarms() {
-  const t    = themes[curTheme];
-  const list = document.getElementById('alarmList');
+  /* get current tog-on colour from CSS variable */
+  const togOn = getComputedStyle(document.getElementById('mainApp'))
+                  .getPropertyValue('--tog-on').trim() || '#555';
+
+  const list  = document.getElementById('almList');
   list.innerHTML = '';
 
   alarms.forEach((a, i) => {
-    const el = document.createElement('div');
-    el.className = 'alarm-item';
-    el.style.cssText = `background:${t.alarmBg};border-color:${t.alarmBorder};`;
-    el.innerHTML = `
-      <div>
-        <div class="alarm-time"  style="color:${t.alarmTime}">${a.time}</div>
-        <div class="alarm-label" style="color:${t.alarmLabel}">${a.label}</div>
+    const isExp = expIdx === i;
+    const div   = document.createElement('div');
+    div.className = 'alm-item';
+    div.innerHTML = `
+      <div class="alm-main" onclick="toggleExp(${i})">
+        <div>
+          <div class="alm-time">${a.time}</div>
+          <div class="alm-meta">${a.label} · ${a.repeat}</div>
+        </div>
+        <div class="alm-right">
+          <button class="tog ${a.on ? 'on' : 'off'}"
+            style="background:${a.on ? togOn : 'var(--dial-ring)'}"
+            onclick="event.stopPropagation(); togAlm(${i})"
+            aria-label="Toggle alarm"></button>
+          <i class="ti ti-chevron-${isExp ? 'up' : 'down'}"
+             style="font-size:13px;color:var(--text-sec);"></i>
+        </div>
       </div>
-      <div class="alarm-right">
-        <button class="toggle ${a.on ? 'on' : 'off'}"
-          style="background:${a.on ? t.toggleOn : t.toggleOff}"
-          onclick="toggleAlarm(${i})"></button>
-        <button class="alarm-delete" style="color:${t.alarmLabel}" onclick="deleteAlarm(${i})">
-          <i class="ti ti-trash"></i>
-        </button>
-      </div>`;
-    list.appendChild(el);
+      ${isExp ? `
+      <div class="alm-exp">
+        <div class="alm-opt" onclick="openPickerFor(${i},'sound')">
+          <span class="alm-opt-lbl">
+            <i class="ti ti-music"></i>Sound
+          </span>
+          <span class="alm-opt-val">
+            ${a.sound} <i class="ti ti-chevron-right" style="font-size:10px"></i>
+          </span>
+        </div>
+        <div class="alm-opt" onclick="openPickerFor(${i},'snooze')">
+          <span class="alm-opt-lbl">
+            <i class="ti ti-zzz"></i>Snooze
+          </span>
+          <span class="alm-opt-val">
+            ${a.snooze} <i class="ti ti-chevron-right" style="font-size:10px"></i>
+          </span>
+        </div>
+        <div class="alm-opt" onclick="openPickerFor(${i},'repeat')">
+          <span class="alm-opt-lbl">
+            <i class="ti ti-repeat"></i>Repeat
+          </span>
+          <span class="alm-opt-val">
+            ${a.repeat} <i class="ti ti-chevron-right" style="font-size:10px"></i>
+          </span>
+        </div>
+        <div class="alm-acts">
+          <button class="alm-act alm-del" onclick="delAlarm(${i})">
+            <i class="ti ti-trash" style="font-size:12px;vertical-align:-1px;margin-right:3px"></i>Delete
+          </button>
+          <button class="alm-act alm-edit" onclick="openModal(${i})">
+            <i class="ti ti-edit" style="font-size:12px;vertical-align:-1px;margin-right:3px"></i>Edit
+          </button>
+        </div>
+      </div>` : ''}`;
+    list.appendChild(div);
   });
 }
 
-function toggleAlarm(i) { alarms[i].on = !alarms[i].on; renderAlarms(); }
-function deleteAlarm(i) { alarms.splice(i, 1); renderAlarms(); }
-function addAlarm() {
-  const time  = prompt('Enter time (HH:MM):', '08:00');
+function toggleExp(i) { expIdx = expIdx === i ? -1 : i; renderAlarms(); }
+function togAlm(i)    { alarms[i].on = !alarms[i].on; renderAlarms(); }
+function delAlarm(i)  { alarms.splice(i, 1); expIdx = -1; renderAlarms(); }
+
+/* ── MODAL ── */
+let editIdx = -1, mSound = 'Radar', mSnooze = '5 min', mRepeat = 'Never';
+
+function openModal(i) {
+  editIdx = i;
+  const a = i >= 0 ? alarms[i] : null;
+  document.getElementById('mTitle').textContent = i >= 0 ? 'Edit Alarm' : 'New Alarm';
+  document.getElementById('mTime').value = a ? a.time  : '08:00';
+  document.getElementById('mLbl').value  = a ? a.label : '';
+  mSound  = a ? a.sound  : 'Radar';
+  mSnooze = a ? a.snooze : '5 min';
+  mRepeat = a ? a.repeat : 'Never';
+  updMVals();
+  document.getElementById('modalBg').classList.add('show');
+}
+
+function updMVals() {
+  const chev = `<i class="ti ti-chevron-right" style="font-size:11px"></i>`;
+  document.getElementById('mSoundV').innerHTML  = `${mSound}  ${chev}`;
+  document.getElementById('mSnoozeV').innerHTML = `${mSnooze} ${chev}`;
+  document.getElementById('mRepeatV').innerHTML = `${mRepeat} ${chev}`;
+}
+
+function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
+
+function closeMBg(e) {
+  if (e.target === document.getElementById('modalBg')) closeModal();
+}
+
+function saveAlarm() {
+  const time  = document.getElementById('mTime').value;
+  const label = document.getElementById('mLbl').value || 'Alarm';
   if (!time) return;
-  const label = prompt('Label:', 'Alarm');
-  alarms.push({ time, label: label || 'Alarm', on: true });
+  const entry = { time, label, on: true, sound: mSound, snooze: mSnooze, repeat: mRepeat };
+  if (editIdx >= 0) alarms[editIdx] = { ...alarms[editIdx], ...entry };
+  else alarms.push(entry);
+  closeModal();
   renderAlarms();
 }
 
-/* ── STOPWATCH ── */
-let swRunning = false, swStart = 0, swElapsed = 0,
-    swInterval = null, laps = [];
+/* ── OPTION PICKER ── */
+let pKey = '', pForIdx = -1;
+
+function openPicker(k)        { pKey = k; pForIdx = -1;  showPicker(); }
+function openPickerFor(i, k)  { pKey = k; pForIdx = i;   showPicker(); }
+
+function showPicker() {
+  const opts = pKey === 'sound' ? SOUNDS : pKey === 'snooze' ? SNOOZES : REPEATS;
+  const cur  = pKey === 'sound' ? mSound : pKey === 'snooze' ? mSnooze : mRepeat;
+  const box  = document.getElementById('pickerBox');
+  box.innerHTML = '';
+
+  opts.forEach(o => {
+    const d  = document.createElement('div');
+    d.className = 'popt' + (o === cur ? ' sel' : '');
+    const tick = o === cur
+      ? `<i class="ti ti-check" style="font-size:13px;color:var(--text-pri)"></i>`
+      : `<span style="width:17px;display:inline-block"></span>`;
+    d.innerHTML = tick + ' ' + o;
+    d.onclick   = () => selectOpt(o);
+    box.appendChild(d);
+  });
+
+  document.getElementById('pickerBg').classList.add('show');
+}
+
+function selectOpt(v) {
+  if      (pKey === 'sound')  { mSound  = v; if (pForIdx >= 0) alarms[pForIdx].sound  = v; }
+  else if (pKey === 'snooze') { mSnooze = v; if (pForIdx >= 0) alarms[pForIdx].snooze = v; }
+  else                        { mRepeat = v; if (pForIdx >= 0) alarms[pForIdx].repeat = v; }
+  updMVals();
+  document.getElementById('pickerBg').classList.remove('show');
+  if (pForIdx >= 0) renderAlarms();
+}
+
+function closePBg(e) {
+  if (e.target === document.getElementById('pickerBg'))
+    document.getElementById('pickerBg').classList.remove('show');
+}
+
+/* ══════════════════════════════════════════════
+   STOPWATCH
+══════════════════════════════════════════════ */
+let swRun  = false, swStart = 0, swEl = 0, swInt = null, laps = [];
 
 function swToggle() {
-  if (!swRunning) {
-    swRunning = true;
-    swStart   = Date.now() - swElapsed;
-    document.getElementById('swIcon').className = 'ti ti-player-pause';
-    swInterval = setInterval(swTick, 30);
+  if (!swRun) {
+    swRun    = true;
+    swStart  = Date.now() - swEl;
+    document.getElementById('swIco').className = 'ti ti-player-pause';
+    swInt = setInterval(swTick, 30);
   } else {
-    swRunning  = false;
-    swElapsed  = Date.now() - swStart;
-    document.getElementById('swIcon').className = 'ti ti-player-play';
-    clearInterval(swInterval);
+    swRun  = false;
+    swEl   = Date.now() - swStart;
+    document.getElementById('swIco').className = 'ti ti-player-play';
+    clearInterval(swInt);
   }
 }
 
 function swTick() {
-  const el  = Date.now() - swStart;
-  const m   = Math.floor(el / 60000);
-  const s   = Math.floor((el % 60000) / 1000);
-  const ms  = Math.floor((el % 1000) / 10);
-  const t   = themes[curTheme];
-  document.getElementById('swDisplay').innerHTML =
+  const el = Date.now() - swStart;
+  const m  = Math.floor(el / 60000);
+  const s  = Math.floor((el % 60000) / 1000);
+  const ms = Math.floor((el % 1000) / 10);
+  document.getElementById('swD').innerHTML =
     `${String(m).padStart(2,'0')}:<span>${String(s).padStart(2,'0')}</span>` +
-    `<span class="sw-ms" style="color:${t.swMsTxt}">.<span>${String(ms).padStart(2,'0')}</span></span>`;
+    `<span class="swms">.<span>${String(ms).padStart(2,'0')}</span></span>`;
 }
 
 function swReset() {
-  swRunning = false;
-  clearInterval(swInterval);
-  swElapsed = 0;
-  laps = [];
-  document.getElementById('swIcon').className = 'ti ti-player-play';
-  const t = themes[curTheme];
-  document.getElementById('swDisplay').innerHTML =
-    `00:<span>00</span><span class="sw-ms" style="color:${t.swMsTxt}">.<span>00</span></span>`;
-  document.getElementById('lapList').innerHTML = '';
+  swRun  = false;
+  clearInterval(swInt);
+  swEl   = 0;
+  laps   = [];
+  document.getElementById('swIco').className = 'ti ti-player-play';
+  document.getElementById('swD').innerHTML   =
+    `00:<span>00</span><span class="swms">.<span>00</span></span>`;
+  document.getElementById('lapL').innerHTML  = '';
 }
 
 function swLap() {
-  if (!swRunning && swElapsed === 0) return;
-  const el  = swRunning ? (Date.now() - swStart) : swElapsed;
-  const m   = Math.floor(el / 60000);
-  const s   = Math.floor((el % 60000) / 1000);
-  const ms  = Math.floor((el % 1000) / 10);
+  if (!swRun && swEl === 0) return;
+  const el = swRun ? (Date.now() - swStart) : swEl;
+  const m  = Math.floor(el / 60000);
+  const s  = Math.floor((el % 60000) / 1000);
+  const ms = Math.floor((el % 1000) / 10);
   laps.push(`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(ms).padStart(2,'0')}`);
-
-  const t   = themes[curTheme];
-  const div = document.createElement('div');
-  div.className = 'lap-item';
-  div.style.cssText = `background:${t.lapBg};color:${t.lapTxt};`;
-  div.innerHTML =
-    `<span style="opacity:0.5">Lap ${laps.length}</span><span>${laps[laps.length - 1]}</span>`;
-  document.getElementById('lapList').prepend(div);
+  const d  = document.createElement('div');
+  d.className   = 'lap-item';
+  d.innerHTML   = `<span style="opacity:.5">Lap ${laps.length}</span><span>${laps[laps.length - 1]}</span>`;
+  document.getElementById('lapL').prepend(d);
 }
 
-/* ── TIMER ── */
-let timerTotal = 300, timerLeft = 300,
-    timerRunning = false, timerInterval = null;
+/* ══════════════════════════════════════════════
+   TIMER
+══════════════════════════════════════════════ */
+let tmrTotal = 300, tmrLeft = 300, tmrRun = false, tmrInt = null;
 
-function setTimer(sec) {
-  timerTotal   = sec;
-  timerLeft    = sec;
-  timerRunning = false;
-  clearInterval(timerInterval);
-  document.getElementById('timerIcon').className = 'ti ti-player-play';
-  document.getElementById('timerSub').textContent = 'READY';
-  updateTimerDisplay();
+function setTimer(s) {
+  tmrTotal = s; tmrLeft = s; tmrRun = false;
+  clearInterval(tmrInt);
+  document.getElementById('tIco').className   = 'ti ti-player-play';
+  document.getElementById('tSub').textContent = 'READY';
+  updTmr();
 }
 
-function updateTimerDisplay() {
-  const m = Math.floor(timerLeft / 60), s = timerLeft % 60;
-  document.getElementById('timerCenter').textContent =
+function updTmr() {
+  const m = Math.floor(tmrLeft / 60);
+  const s = tmrLeft % 60;
+  document.getElementById('tCtr').textContent =
     `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  const prog = timerLeft / timerTotal;
-  document.getElementById('arcFg').style.strokeDashoffset = C * (1 - prog);
+  document.getElementById('tarcFg').style.strokeDashoffset =
+    TC * (1 - tmrLeft / tmrTotal);
+  document.getElementById('tarcFg').style.stroke = 'var(--arc-fg)';
 }
 
-function timerToggle() {
-  if (timerLeft <= 0) return;
-  if (!timerRunning) {
-    timerRunning = true;
-    document.getElementById('timerIcon').className = 'ti ti-player-pause';
-    document.getElementById('timerSub').textContent = 'RUNNING';
-    timerInterval = setInterval(() => {
-      timerLeft--;
-      updateTimerDisplay();
-      if (timerLeft <= 0) {
-        timerRunning = false;
-        clearInterval(timerInterval);
-        document.getElementById('timerIcon').className = 'ti ti-player-play';
-        document.getElementById('timerSub').textContent = 'DONE';
+function tmrToggle() {
+  if (tmrLeft <= 0) return;
+  if (!tmrRun) {
+    tmrRun = true;
+    document.getElementById('tIco').className   = 'ti ti-player-pause';
+    document.getElementById('tSub').textContent = 'RUNNING';
+    tmrInt = setInterval(() => {
+      tmrLeft--;
+      updTmr();
+      if (tmrLeft <= 0) {
+        tmrRun = false;
+        clearInterval(tmrInt);
+        document.getElementById('tIco').className   = 'ti ti-player-play';
+        document.getElementById('tSub').textContent = 'DONE';
       }
     }, 1000);
   } else {
-    timerRunning = false;
-    clearInterval(timerInterval);
-    document.getElementById('timerIcon').className = 'ti ti-player-play';
-    document.getElementById('timerSub').textContent = 'PAUSED';
+    tmrRun = false;
+    clearInterval(tmrInt);
+    document.getElementById('tIco').className   = 'ti ti-player-play';
+    document.getElementById('tSub').textContent = 'PAUSED';
   }
 }
 
-function timerReset() {
-  timerLeft    = timerTotal;
-  timerRunning = false;
-  clearInterval(timerInterval);
-  document.getElementById('timerIcon').className = 'ti ti-player-play';
-  document.getElementById('timerSub').textContent = 'READY';
-  updateTimerDisplay();
+function setCustomTimer() {
+    let mins = document.getElementById("customTime").value;
+    if (mins > 0) {
+        setTimer(mins * 60);
+    } else {
+        alert("Please enter a valid time");
+    }
+}
+
+function tmrReset() {
+  tmrLeft  = tmrTotal; tmrRun = false;
+  clearInterval(tmrInt);
+  document.getElementById('tIco').className   = 'ti ti-player-play';
+  document.getElementById('tSub').textContent = 'READY';
+  updTmr();
 }
 
 /* ── INIT ── */
-updateTimerDisplay();
-applyTheme(0);
+updTmr();
+renderAlarms();
