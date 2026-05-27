@@ -1,15 +1,18 @@
 # ⏰ Clock App
 
+## 🔗 Live Demo  
+👉 https://mohit-089.github.io/Clock-App/
+
 A lightweight and elegant **Digital Clock Web Application** built using HTML, CSS, and JavaScript.  
 This project displays the current time in real‑time with a clean and responsive UI.
 
 ---
 
 ## 🚀 Features
-- Real‑time digital clock
-- Smooth and minimal UI
-- Fully responsive layout
-- Beginner‑friendly codebase
+- Real‑time digital clock  
+- Smooth and minimal UI  
+- Fully responsive layout  
+- Beginner‑friendly codebase  
 
 ---
 
@@ -23,4 +26,4 @@ This project displays the current time in real‑time with a clean and responsiv
 ## 📦 How to Use
 1. Download or clone the repository  
    ```bash
-   https://mohit-089.github.io/Clock-App/
+   git clone https://github.com/mohit-089/Clock-App.git
